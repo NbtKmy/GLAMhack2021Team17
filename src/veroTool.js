@@ -29,7 +29,7 @@ function loadData(data) {
 }
 
 $(document).ready(function() {
-    var file = ":/mei/default.mei";
+    var file = "./mei/default.mei";
     $.ajax({
         url: file
         , dataType: "text"
