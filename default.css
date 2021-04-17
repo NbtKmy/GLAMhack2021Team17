@@ -6,6 +6,7 @@ div.uv {
     float: left;
 }
 #svg_output {
-    width: 50vw;
+    width:760px; 
+    height:820px;
     float: right;
 }
