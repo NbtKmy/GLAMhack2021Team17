@@ -1,5 +1,8 @@
+#bt {
+    vertical-align:top;
+}
 
-.uv {
+div.uv {
     float: left;
 }
 #svg_output {
