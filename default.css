@@ -1,9 +1,8 @@
-#svg_output {
-    width: 50vw
-}
-div.div_1 {
+
+.uv {
     float: left;
 }
-div.div_2 {
-        float: right;
+#svg_output {
+    width: 50vw
+    float: right;
 }
