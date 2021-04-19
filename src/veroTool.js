@@ -1,5 +1,6 @@
 const vrvToolkit = new verovio.toolkit();
 const picoAudio = new PicoAudio();
+picoAudio.init();
 
 var zoom = 30;
 var ids = [];
@@ -56,18 +57,18 @@ function loadFile() {
 // Midi Player
 function play_midi() {
     if (isPlaying == false) {
-        picoAudio.init();
         picoAudio.play();
         isPlaying = true;
-    };
+    } else {
+        ;
+    }
 }
 
 // Midi stopper
-function stop_midi() {
+function pause_midi() {
         ids.forEach(function(noteid) {
             $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
         });
-        picoAudio.init();
         picoAudio.pause();
         isPlaying = false;
 }
