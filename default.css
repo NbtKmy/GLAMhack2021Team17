@@ -1,12 +1,14 @@
 #bt {
-    vertical-align:top;
+    vertical-align: top;
 }
 
 div.uv {
     float: left;
+    vertical-align: middle;
 }
 #svg_output {
-    width: 50vw
-    height: 80vh
+    width: 50vw;
+    height: 80vh;
     float: right;
+    vertical-align: middle;
 }
