@@ -4,6 +4,7 @@
         <link rel="stylesheet" type="text/css" href="./default.css">
         <script src="https://www.verovio.org/javascript/develop/verovio-toolkit.js" type="text/javascript" ></script>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript" ></script>
+        <script src="https://unpkg.com/pico-audio-js/dist/browser/PicoAudio.js"></script>
         <script src="./src/playButton.js" type="text/javascript" ></script>
         <script src="./src/veroTool.js" type="text/javascript" ></script>
     </head>
@@ -13,6 +14,9 @@
         <button class="bt" id="bt1" onClick="play('music')"><img src="./icon/play.svg" width="32" height="32" /></button>
         <button class="bt" id="bt2" onClick="stopp('music')"><img src="./icon/stop.svg" width="32" height="32" /></button>
         <button class="bt" id="bt3" onClick="pause('music')"><img src="./icon/pause.svg" width="32" height="32" /></button>
+
+        <button id="play_midi" onClick="play_midi()"><img src="./icon/play.svg" width="32" height="32" /></button>
+        <button id="stop_midi" onClick="stop_midi()"><img src="./icon/stop.svg" width="32" height="32" /></button>
 
         <div class="uv" data-locale="en-GB:English (GB),cy-GB:Cymraeg" data-config="/config.json" data-uri="https://www.e-rara.ch/i3f/v20/22182025/manifest" data-collectionindex="0" data-manifestindex="0" data-sequenceindex="0" data-canvasindex="15" data-xywh="-1924,-1,10148,4058" data-rotation="0" style="width:45vw; height:80vh; background-color: #000"></div>
         
