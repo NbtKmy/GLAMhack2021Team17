@@ -7,3 +7,23 @@
             audio.currentTime = 0
         }
     }
+
+    function stop(id) {
+        var audio = document.getElementById(id);
+        if (!audio.paused) {
+            audio.pause();
+            audio.currentTime = 0
+        }else{
+            ; 
+            
+        }
+    }
+
+    function pause(id) {
+        var audio = document.getElementById(id);
+        if (!audio.paused) {
+            audio.pause();
+        }else{
+            ; 
+        }
+    }

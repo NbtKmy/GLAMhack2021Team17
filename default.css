@@ -1,16 +1,17 @@
-#bt {
+button.bt {
     position: absolute;
     top: 0; 
-    left: 0;
 }
 
 div.uv {
     float: left;
-    vertical-align: middle;
+    position: relative;
+    top: 50px;
 }
 #svg_output {
-    width: 50vw;
+    width: 45vw;
     height: 80vh;
     float: right;
-    vertical-align: middle;
+    position: relative; 
+    top: 50px; 
 }
