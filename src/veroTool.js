@@ -1,7 +1,5 @@
 var vrvToolkit = new verovio.toolkit();
-var zoom = 500;
-//var pageHeight = 800;
-//var pageWidth = 800;
+var zoom = 20;
 
 function setOptions() {
     let pageHeight = $("#svg_output").height() * 100 / zoom ;
@@ -15,9 +13,7 @@ function setOptions() {
     vrvToolkit.setOptions(options);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-/* A function that sets the options, loads the data and render the first page */
-////////////////////////////////////////////////////////////////////////////////
+
 function loadData(data) {
     setOptions();
     vrvToolkit.loadData(data);
