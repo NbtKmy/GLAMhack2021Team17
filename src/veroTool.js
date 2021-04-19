@@ -1,14 +1,11 @@
 var vrvToolkit = new verovio.toolkit();
-var zoom = 100;
-var pageHeight = 800;
-var pageWidth = 800;
+var zoom = 500;
+//var pageHeight = 800;
+//var pageWidth = 800;
 
 function setOptions() {
-    //////////////////////////////////////////////////////////////
-    /* Adjust the height and width according to the window size */
-    //////////////////////////////////////////////////////////////
-    pageHeight = $("#svg_output").height() * 100 / zoom ;
-    pageWidth = $("#svg_output").width() * 100 / zoom ;
+    let pageHeight = $("#svg_output").height() * 100 / zoom ;
+    let pageWidth = $("#svg_output").width() * 100 / zoom ;
     options = {
                 pageHeight: pageHeight,
                 pageWidth: pageWidth,
