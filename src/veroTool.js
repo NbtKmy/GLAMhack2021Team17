@@ -1,5 +1,5 @@
 var vrvToolkit = new verovio.toolkit();
-var zoom = 40;
+var zoom = 30;
 
 function setOptions() {
     let pageHeight = $("#svg_output").height() * 100 / zoom ;

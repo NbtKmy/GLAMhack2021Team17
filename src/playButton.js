@@ -8,7 +8,7 @@
         }
     }
 
-    function stop(id) {
+    function stopp(id) {
         var audio = document.getElementById(id);
         if (!audio.paused) {
             audio.pause();

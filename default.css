@@ -1,6 +1,19 @@
-button.bt {
+#bt1 {
     position: absolute;
-    top: 0; 
+    top: 0;
+    left: 0;
+}
+
+#bt2 {
+    position: absolute;
+    top: 0;
+    left: 50;
+}
+
+#bt3 {
+    position: absolute;
+    top: 0;
+    left: 100;
 }
 
 div.uv {
