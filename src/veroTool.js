@@ -88,22 +88,41 @@ function pause_midi() {
         isPlaying = false;
 } 
 */
+NProgress.start();
 let samples = SampleLibrary.load({
     instruments: ['piano', 'cello', 'clarinet', 'contrabass', 'flute', 'organ', 'saxophone', 'trombone', 'trumpet', 'violin'],
     baseUrl: "../samples/"
 })
-const piano = samples['piano'];
-piano.toDestination();
+
+let current
+Tone.Buffer.on('load', function() {
+    //document.querySelector(".container").style.display = 'block';
+    //document.querySelector("#loading").style.display = 'none';
+    NProgress.done();
+
+    // loop through instruments and set release, connect to master output
+    for (var property in samples) {
+        if (samples.hasOwnProperty(property)) {
+            console.log(samples[property])
+            samples[property].release = .5;
+            samples[property].toMaster();
+            }
+        }
+    current = samples['piano'];
+})
+
 
 // MIDI from base64 to arraybuffer
 function _base64ToArrayBuffer(base64) {
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
+    var binaryMidi = window.atob(base64);
+    var u16 = new Uint16Array(binaryMidi.length);
+    var u8 = new Uint8Array(binaryMidi.length);
+    var len = binaryMidi.length;
+    for(var i=0;i<len;i++){
+        u16[i] = binaryMidi[i].charCodeAt(0);
+        u8[i] = u16[i];
     }
-    return bytes.buffer;
+    return u8.buffer;
 }
 
 $(document).ready(function() {
@@ -112,39 +131,33 @@ $(document).ready(function() {
     // set the Midi data
     var base64midi = vrvToolkit.renderToMIDI();
     var song = _base64ToArrayBuffer(base64midi);
-    const midisong = new Midi(song)
+    const midisong = new Midi(song);
 
-    console.log(midisong);
+    console.log(JSON.stringify(midisong));
 
-    Tone.Transport.bpm.value = midisong.header.tempos[0];
+    Tone.Transport.bpm.value = midisong.header.tempos[0].bpm;
     midisong.tracks.forEach(track => {
         //tracks have notes and controlChanges
-        const TrackInst = instrument.name;
+        const TrackInst = track.instrument.name;
         console.log(TrackInst);
 
         //notes are an array
-        const notes = track.notes
+        const notes = track.notes;
+        let partNotes = [];
         notes.forEach(note => {
         //note.midi, note.time, note.duration, note.name
-        new Tone.Part(((note) => {
-            // .midファイルの通りに発音させる
-            piano.triggerAttackRelease(note.name, note.time, note.velocity);
-            }), note.duration).start();
+        let n = {
+            "name" : note.name,
+            "duration" : note.duration,
+            "time" : note.time,
+            "velocity" : note.velocity
+            };
+        console.log(n);
+        partNotes.push(n);
         })
-      })
+
+        console.log(partNotes);
+        new Tone.Part( nt => {
+            current.triggerAttackRelease(nt.name, nt.duration, nt.time, nt.velocity)}, partNotes).start(0);
+        })
 });
-
-/*$(document).ready(function() {
-
-    loadFile();
-    // set the Midi data
-    var base64midi = vrvToolkit.renderToMIDI();
-    song = _base64ToArrayBuffer(base64midi);
-    const midi = new Midi(midiData)
-    //var song = "data:audio/midi;base64," + base64midi;
-    const smfData = new Uint8Array(song);
-    const parsedData = picoAudio.parseSMF(smfData);
-    picoAudio.setData(parsedData);
-
-});
-*/
