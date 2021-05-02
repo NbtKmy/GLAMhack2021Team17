@@ -54,26 +54,30 @@ function loadFile() {
 }
 
 
-//Syth 
-const synth = new Tone.PolySynth(Tone.Synth).toMaster();
+//Synth 
+
+let playing_status = false;
 
 // Midi Player
 const playButtonElem = document.getElementById("play_midi_bt");
-playButtonElem.addEventListener("click", async () => {
-    await Tone.start()
-    console.log('audio is ready')
-    
+playButtonElem.addEventListener("click", () => {
+    if (!playing_status){
+    playing_status = true
     Tone.Transport.start();
-});
+    }
+}, false);
 
 // Midi stopper
-const pauseButtonElem = document.getElementById('pause_midi_bt');
-pauseButtonElem.addEventListener('click', () => {
+const pauseButtonElem = document.getElementById("pause_midi_bt");
+pauseButtonElem.addEventListener("click", () => {
+    if (playing_status){
+    playing_status = false
     ids.forEach(function(noteid) {
         $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
     });
     Tone.Transport.stop();
-});
+    }
+}, false);
 
 /*
 function pause_midi() {
@@ -84,7 +88,12 @@ function pause_midi() {
         isPlaying = false;
 } 
 */
-
+let samples = SampleLibrary.load({
+    instruments: ['piano', 'cello', 'clarinet', 'contrabass', 'flute', 'organ', 'saxophone', 'trombone', 'trumpet', 'violin'],
+    baseUrl: "../samples/"
+})
+const piano = samples['piano'];
+piano.toDestination();
 
 // MIDI from base64 to arraybuffer
 function _base64ToArrayBuffer(base64) {
@@ -104,21 +113,25 @@ $(document).ready(function() {
     var base64midi = vrvToolkit.renderToMIDI();
     var song = _base64ToArrayBuffer(base64midi);
     const midisong = new Midi(song)
-    MidiConvert.load(midisong, function(midi) {
-        // .midファイルと同じBPMに設定
-        Tone.Transport.bpm.value = midi.header.bpm;
-        // 必要なパート分をループ
-        for(var i=0; i<midi.tracks.length; i++) {
-            new Tone.Part(function(time, note) {
-            // .midファイルの通りに発音させる
-            synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
-            }, midi.tracks[i].notes).start();
-        }
-        // 全体のパートを同期させて演奏
-        //Tone.Transport.start();
-    });
-    
 
+    console.log(midisong);
+
+    Tone.Transport.bpm.value = midisong.header.tempos[0];
+    midisong.tracks.forEach(track => {
+        //tracks have notes and controlChanges
+        const TrackInst = instrument.name;
+        console.log(TrackInst);
+
+        //notes are an array
+        const notes = track.notes
+        notes.forEach(note => {
+        //note.midi, note.time, note.duration, note.name
+        new Tone.Part(((note) => {
+            // .midファイルの通りに発音させる
+            piano.triggerAttackRelease(note.name, note.time, note.velocity);
+            }), note.duration).start();
+        })
+      })
 });
 
 /*$(document).ready(function() {
