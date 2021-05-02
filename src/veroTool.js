@@ -55,7 +55,7 @@ function loadFile() {
 
 
 //Syth 
-const synth = new Tone.PolySynth(16).toMaster();
+const synth = new Tone.PolySynth(Tone.Synth).toMaster();
 
 // Midi Player
 const playButtonElem = document.getElementById("play_midi_bt");
