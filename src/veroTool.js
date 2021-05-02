@@ -1,5 +1,5 @@
 const vrvToolkit = new verovio.toolkit();
-const picoAudio = new PicoAudio();
+//const picoAudio = new PicoAudio();
 //picoAudio.init();
 
 var zoom = 30;
@@ -54,11 +54,16 @@ function loadFile() {
 }
 
 
+//Syth 
+const synth = new Tone.PolySynth(16).toMaster();
+
 // Midi Player
 const playButtonElem = document.getElementById("play_midi_bt");
-playButtonElem.addEventListener("click", () => {
-    picoAudio.init();
-    picoAudio.play();
+playButtonElem.addEventListener("click", async () => {
+    await Tone.start()
+    console.log('audio is ready')
+    
+    Tone.Transport.start();
 });
 
 // Midi stopper
@@ -67,8 +72,7 @@ pauseButtonElem.addEventListener('click', () => {
     ids.forEach(function(noteid) {
         $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
     });
-    picoAudio.init();
-    picoAudio.pause();
+    Tone.Transport.stop();
 });
 
 /*
@@ -98,10 +102,36 @@ $(document).ready(function() {
     loadFile();
     // set the Midi data
     var base64midi = vrvToolkit.renderToMIDI();
+    var song = _base64ToArrayBuffer(base64midi);
+    const midisong = new Midi(song)
+    MidiConvert.load(midisong, function(midi) {
+        // .midファイルと同じBPMに設定
+        Tone.Transport.bpm.value = midi.header.bpm;
+        // 必要なパート分をループ
+        for(var i=0; i<midi.tracks.length; i++) {
+            new Tone.Part(function(time, note) {
+            // .midファイルの通りに発音させる
+            synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
+            }, midi.tracks[i].notes).start();
+        }
+        // 全体のパートを同期させて演奏
+        //Tone.Transport.start();
+    });
+    
+
+});
+
+/*$(document).ready(function() {
+
+    loadFile();
+    // set the Midi data
+    var base64midi = vrvToolkit.renderToMIDI();
     song = _base64ToArrayBuffer(base64midi);
+    const midi = new Midi(midiData)
     //var song = "data:audio/midi;base64," + base64midi;
     const smfData = new Uint8Array(song);
     const parsedData = picoAudio.parseSMF(smfData);
     picoAudio.setData(parsedData);
 
 });
+*/
