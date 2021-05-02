@@ -32,7 +32,7 @@
                   <staffGrp xml:id="staffgrp-0000001374353538">
                      <staffGrp xml:id="P1" bar.thru="true">
                         <label xml:id="label-0000000807167793">Piano</label>
-                        <instrDef xml:id="instrdef-0000001748007607" midi.channel="0" midi.instrnum="0" midi.volume="77.00%" />
+                        <instrDef xml:id="instrdef-0000001748007607" midi.channel="0" midi.instrnum="40" midi.volume="77.00%" />
                         <staffDef xml:id="staffdef-0000000982591312" n="1" lines="5" ppq="2">
                            <clef xml:id="clef-0000001291183059" shape="G" line="2" />
                            <keySig xml:id="keysig-0000000516986863" sig="2f" />
