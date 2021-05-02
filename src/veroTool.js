@@ -91,7 +91,7 @@ function pause_midi() {
 NProgress.start();
 let samples = SampleLibrary.load({
     instruments: ['piano', 'cello', 'clarinet', 'contrabass', 'flute', 'organ', 'saxophone', 'trombone', 'trumpet', 'violin'],
-    baseUrl: "../samples/"
+    baseUrl: "/GLAMhack2021Team17/samples/"
 })
 
 let current
