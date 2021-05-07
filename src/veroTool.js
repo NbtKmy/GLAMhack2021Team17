@@ -1,12 +1,11 @@
 const vrvToolkit = new verovio.toolkit();
-//const picoAudio = new PicoAudio();
-//picoAudio.init();
+
 
 var zoom = 30;
 var ids = [];
 var isPlaying = false;
 
-function setOptions() {
+function set_Options() {
     let pageHeight = $("#svg_output").height() * 100 / zoom ;
     let pageWidth = $("#svg_output").width() * 100 / zoom ;
     options = {
@@ -18,15 +17,15 @@ function setOptions() {
     vrvToolkit.setOptions(options);
 }
 
-function loadData(data) {
-    setOptions();
+function load_Data(data) {
+    set_Options();
     vrvToolkit.loadData(data);
 
     page = 1;
-    loadPage();
+    load_Page();
 }
 
-function loadPage() {
+function load_Page() {
     svg = vrvToolkit.renderToSVG(page, {});
     $("#svg_output").html(svg);
 
@@ -38,60 +37,30 @@ function loadPage() {
         var time = vrvToolkit.getTimeForElement(id);
         //$("#midi-player").midiPlayer.seek(time);
     });
-};
+}
 
 
 
-function loadFile() {
-    file = "./mei/default.mei";
+function load_File() {
+    const file = "./mei/default.mei";
     $.ajax({
         url: file
         , dataType: "text"
         , success: function(data) {
-            loadData(data);
+            load_Data(data);
         }
     });
 }
+//////////////////////////
+/*Sampler configuration */
+//////////////////////////
+const instlist = ['piano', 'cello', 'clarinet', 'contrabass', 'flute', 'organ', 'saxophone', 'trombone', 'trumpet', 'violin'];
 
-
-//Synth 
-
-let playing_status = false;
-
-// Midi Player
-const playButtonElem = document.getElementById("play_midi_bt");
-playButtonElem.addEventListener("click", () => {
-    if (!playing_status){
-    playing_status = true
-    Tone.Transport.start();
-    }
-}, false);
-
-// Midi stopper
-const pauseButtonElem = document.getElementById("pause_midi_bt");
-pauseButtonElem.addEventListener("click", () => {
-    if (playing_status){
-    playing_status = false
-    ids.forEach(function(noteid) {
-        $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
-    });
-    Tone.Transport.stop();
-    }
-}, false);
-
-/*
-function pause_midi() {
-        ids.forEach(function(noteid) {
-            $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
-        });
-        picoAudio.pause();
-        isPlaying = false;
-} 
-*/
 NProgress.start();
 let samples = SampleLibrary.load({
-    instruments: ['piano', 'cello', 'clarinet', 'contrabass', 'flute', 'organ', 'saxophone', 'trombone', 'trumpet', 'violin'],
+    instruments: instlist,
     baseUrl: "/GLAMhack2021Team17/samples/"
+    //baseUrl: "../samples/"
 })
 
 let current
@@ -111,13 +80,18 @@ Tone.Buffer.on('load', function() {
     current = samples['piano'];
 })
 
+//////////////////////////
+/* Player configuration */
+//////////////////////////
+let playing_status = false;
 
 // MIDI from base64 to arraybuffer
 function _base64ToArrayBuffer(base64) {
     var binaryMidi = window.atob(base64);
-    var u16 = new Uint16Array(binaryMidi.length);
-    var u8 = new Uint8Array(binaryMidi.length);
     var len = binaryMidi.length;
+    var u16 = new Uint16Array(len);
+    var u8 = new Uint8Array(len);
+    
     for(var i=0;i<len;i++){
         u16[i] = binaryMidi[i].charCodeAt(0);
         u8[i] = u16[i];
@@ -125,21 +99,24 @@ function _base64ToArrayBuffer(base64) {
     return u8.buffer;
 }
 
-$(document).ready(function() {
+// Midi Player
+const playButtonElem = document.getElementById("play_midi_bt");
+playButtonElem.addEventListener("click", () => {
 
-    loadFile();
     // set the Midi data
     var base64midi = vrvToolkit.renderToMIDI();
     var song = _base64ToArrayBuffer(base64midi);
     const midisong = new Midi(song);
-
-    console.log(JSON.stringify(midisong));
-
     Tone.Transport.bpm.value = midisong.header.tempos[0].bpm;
     midisong.tracks.forEach(track => {
         //tracks have notes and controlChanges
         const TrackInst = track.instrument.name;
         console.log(TrackInst);
+        
+        // if the instrument for the track in the instlist, then change the instrument. if not, then piano.
+        if (instlist.includes(TrackInst)){
+            current = samples[TrackInst];
+        }
 
         //notes are an array
         const notes = track.notes;
@@ -152,12 +129,32 @@ $(document).ready(function() {
             "time" : note.time,
             "velocity" : note.velocity
             };
-        console.log(n);
         partNotes.push(n);
         })
 
         console.log(partNotes);
-        new Tone.Part( nt => {
-            current.triggerAttackRelease(nt.name, nt.duration, nt.time, nt.velocity)}, partNotes).start(0);
-        })
+        new Tone.Part( (time, nt) => {
+            current.triggerAttackRelease(nt.name, nt.duration, time, nt.velocity)}, partNotes).start(0);
+    })
+    if (!playing_status){
+    playing_status = true
+    Tone.Transport.start();
+    }
+}, false);
+
+// Midi stopper
+const pauseButtonElem = document.getElementById("pause_midi_bt");
+pauseButtonElem.addEventListener("click", () => {
+    if (playing_status){
+    playing_status = false
+    ids.forEach(function(noteid) {
+        $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
+    });
+    Tone.Transport.stop();
+    }
+}, false);
+
+
+$(document).ready(function() {
+    load_File();
 });
