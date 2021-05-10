@@ -1,9 +1,8 @@
 const vrvToolkit = new verovio.toolkit();
 
 
-var zoom = 30;
-var ids = [];
-var isPlaying = false;
+let zoom = 30;
+
 
 function set_Options() {
     let pageHeight = $("#svg_output").height() * 100 / zoom ;
@@ -33,8 +32,8 @@ function load_Page() {
     /* Bind a on click event to each note */
     ////////////////////////////////////////
     $(".note").click(function() {
-        var id = $(this).attr("id");
-        var time = vrvToolkit.getTimeForElement(id);
+        let id = $(this).attr("id");
+        let time = vrvToolkit.getTimeForElement(id);
         //$("#midi-player").midiPlayer.seek(time);
     });
 }
@@ -60,6 +59,7 @@ NProgress.start();
 let samples = SampleLibrary.load({
     instruments: instlist,
     baseUrl: "/GLAMhack2021Team17/samples/"
+    // for local 
     //baseUrl: "../samples/"
 })
 
@@ -70,9 +70,9 @@ Tone.Buffer.on('load', function() {
     NProgress.done();
 
     // loop through instruments and set release, connect to master output
-    for (var property in samples) {
+    for (let property in samples) {
         if (samples.hasOwnProperty(property)) {
-            console.log(samples[property])
+            //console.log(samples[property]);
             samples[property].release = .5;
             samples[property].toMaster();
             }
@@ -80,38 +80,80 @@ Tone.Buffer.on('load', function() {
     current = samples['piano'];
 })
 
-//////////////////////////
-/* Player configuration */
-//////////////////////////
+///////////////////////////////
+/* MIDI Player configuration */
+///////////////////////////////
 let playing_status = false;
+// ids for the each notes on the music score
+let ids = [];
+// Global variant for setInterval method
+let scoreSync
 
 // MIDI from base64 to arraybuffer
 function _base64ToArrayBuffer(base64) {
-    var binaryMidi = window.atob(base64);
-    var len = binaryMidi.length;
-    var u16 = new Uint16Array(len);
-    var u8 = new Uint8Array(len);
+    let binaryMidi = window.atob(base64);
+    let len = binaryMidi.length;
+    let u16 = new Uint16Array(len);
+    let u8 = new Uint8Array(len);
     
-    for(var i=0;i<len;i++){
+    for(let i=0;i<len;i++){
         u16[i] = binaryMidi[i].charCodeAt(0);
         u8[i] = u16[i];
     }
     return u8.buffer;
 }
 
-// Midi Player
+function midi_score_sync(time){
+    console.log(time);
+    // time needs to - 400 for adjustment
+    let vrvTime = Math.max(0, time - 200);
+    let elementsattime = vrvToolkit.getElementsAtTime(vrvTime);
+    if (elementsattime.page > 0) {
+        if (elementsattime.page != page) {
+            page = elementsattime.page;
+            loadPage();
+        }
+        if ((elementsattime.notes.length > 0) && (ids != elementsattime.notes)) {
+            ids.forEach(function(noteid) {
+                if ($.inArray(noteid, elementsattime.notes) == -1) {
+                    $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
+                }
+            });
+            ids = elementsattime.notes;
+            ids.forEach(function(noteid) {
+                if ($.inArray(noteid, elementsattime.notes) != -1) {
+                    $("#" + noteid).attr("fill", "#c00").attr("stroke", "#c00");;
+                }
+            });
+        }
+    }
+}
+
+function TimeInMusic() {
+scoreSync = setInterval(() => {
+    let time_in_music = Tone.Transport.seconds;
+    let rounded = Math.round(time_in_music * 1000);
+    midi_score_sync(rounded);
+}, 100);
+}
+
+// Midi Starter
 const playButtonElem = document.getElementById("play_midi_bt");
 playButtonElem.addEventListener("click", () => {
 
     // set the Midi data
-    var base64midi = vrvToolkit.renderToMIDI();
-    var song = _base64ToArrayBuffer(base64midi);
+    let base64midi = vrvToolkit.renderToMIDI();
+    let song = _base64ToArrayBuffer(base64midi);
     const midisong = new Midi(song);
     Tone.Transport.bpm.value = midisong.header.tempos[0].bpm;
+    // timeSig from the first track
+    let timeSig = "midisong.timeSigunatures[0].timeSignature[0]" + "/" + "midisong.timeSigunatures[0].timeSignature[1]";
+    Tone.Transport.timeSignature = timeSig;
+    //console.log(midisong);
     midisong.tracks.forEach(track => {
         //tracks have notes and controlChanges
         const TrackInst = track.instrument.name;
-        console.log(TrackInst);
+        //console.log(TrackInst);
         
         // if the instrument for the track in the instlist, then change the instrument. if not, then piano.
         if (instlist.includes(TrackInst)){
@@ -132,13 +174,14 @@ playButtonElem.addEventListener("click", () => {
         partNotes.push(n);
         })
 
-        console.log(partNotes);
+        //console.log(partNotes);
         new Tone.Part( (time, nt) => {
             current.triggerAttackRelease(nt.name, nt.duration, time, nt.velocity)}, partNotes).start(0);
     })
     if (!playing_status){
     playing_status = true
     Tone.Transport.start();
+    TimeInMusic();
     }
 }, false);
 
@@ -151,6 +194,7 @@ pauseButtonElem.addEventListener("click", () => {
         $("#" + noteid).attr("fill", "#000").attr("stroke", "#000");
     });
     Tone.Transport.stop();
+    clearInterval(scoreSync);
     }
 }, false);
 
