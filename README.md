@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+# GLAMhack 2021 Team 17 "Making digitized scores audible"
+This site presents the result of the [project Team 17 "Making digitized scores audible" at the GLAMhack 2021](https://hack.glam.opendata.ch/project/71).
 
-You can use the [editor on GitHub](https://github.com/NbtKmy/GLAMhack2021Team17/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+You find the description, how we get the score as digital image into a audible format, in the [project page](https://hack.glam.opendata.ch/project/71). This website shows what can you do with a music score in the MEI format ([Music Encoding Initiative](https://music-encoding.org/)).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Please visit the example page: https://nbtkmy.github.io/GLAMhack2021Team17/result.html
 
-### Markdown
+In this example page a MEI file is audible and can be rendered with the following tones: 
+* piano
+* cello
+* clarinet
+* contrabass
+* flute
+* organ
+* saxophone
+* trombone
+* trumpet 
+* violin
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## JS libraries
 
-```markdown
-Syntax highlighted code block
+The following JS libraries are applied:
 
-# Header 1
-## Header 2
-### Header 3
+* [verovio](https://www.verovio.org/index.xhtml)
+* [Tone.js](https://tonejs.github.io/)
 
-- Bulleted
-- List
 
-1. Numbered
-2. List
+## Tone materials
 
-**Bold** and _Italic_ and `Code` text
+For the expression of various instruments, the sample tone materials collected by nbrosowsky are used:
+https://github.com/nbrosowsky/tonejs-instruments
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/NbtKmy/GLAMhack2021Team17/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.

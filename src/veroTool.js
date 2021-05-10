@@ -1,8 +1,9 @@
 const vrvToolkit = new verovio.toolkit();
 
-
-let zoom = 30;
-
+/////////////////////////////////////////
+/* rendering a MEI file as a SVG score */
+/////////////////////////////////////////
+const zoom = 30;
 
 function set_Options() {
     let pageHeight = $("#svg_output").height() * 100 / zoom ;
@@ -28,9 +29,7 @@ function load_Page() {
     svg = vrvToolkit.renderToSVG(page, {});
     $("#svg_output").html(svg);
 
-    ////////////////////////////////////////
-    /* Bind a on click event to each note */
-    ////////////////////////////////////////
+    // Bind a on click event to each note 
     $(".note").click(function() {
         let id = $(this).attr("id");
         let time = vrvToolkit.getTimeForElement(id);
@@ -50,6 +49,8 @@ function load_File() {
         }
     });
 }
+
+
 //////////////////////////
 /*Sampler configuration */
 //////////////////////////
@@ -59,10 +60,11 @@ NProgress.start();
 let samples = SampleLibrary.load({
     instruments: instlist,
     baseUrl: "/GLAMhack2021Team17/samples/"
-    // for local 
+    // for the local test situation
     //baseUrl: "../samples/"
 })
 
+// current = current instrument
 let current
 Tone.Buffer.on('load', function() {
     //document.querySelector(".container").style.display = 'block';
@@ -104,8 +106,8 @@ function _base64ToArrayBuffer(base64) {
 }
 
 function midi_score_sync(time){
-    console.log(time);
-    // time needs to - 400 for adjustment
+    //console.log(time);
+    // time needs to - 200 for adjustment
     let vrvTime = Math.max(0, time - 200);
     let elementsattime = vrvToolkit.getElementsAtTime(vrvTime);
     if (elementsattime.page > 0) {
@@ -198,6 +200,9 @@ pauseButtonElem.addEventListener("click", () => {
     }
 }, false);
 
+//////////////////////
+/* Loading MEI file */
+//////////////////////
 
 $(document).ready(function() {
     load_File();
