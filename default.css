@@ -1,30 +1,76 @@
-#bt1 {
-    position: absolute;
-    top: 0;
-    left: 0;
+*{
+    pading: 0;
+    margin: 0;
 }
 
-#bt2 {
-    position: absolute;
-    top: 0;
-    left: 50;
+
+
+body {
+    display: flex;
+    flex-direction: column;
 }
 
-#bt3 {
-    position: absolute;
-    top: 0;
-    left: 100;
+#header {
+    width: 100vw;
+    height: 6vh;
+    background-color: #302833;
+    color: #f8fbf8;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
 }
+
+#controller1 {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    font-size: x-large;
+}
+
+
+#controller2 {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    font-size: x-large;
+}
+
+
+
+footer {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    align-self: flex-end;
+    background-color: #302833;
+    color: #f8fbf8;
+    width: 100vw;
+    height: 100px;
+    font-size: large;
+}
+
+#wrapper {
+  display: flex;
+  flex-grow: 1; 
+  flex-flow: row wrap;
+  justify-content: space-around;
+  background-color:#f6ad49;
+}
+
 
 div.uv {
-    float: left;
-    position: relative;
-    top: 50px;
+    flex-grow: 1;
+    align-self: center;
 }
+
 #svg_output {
     width: 45vw;
     height: 80vh;
-    float: right;
-    position: relative; 
-    top: 50px; 
+    flex-grow: 1;
+    align-self: center;
+    background-color: #f8fbf8;
 }

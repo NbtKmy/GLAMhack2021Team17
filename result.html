@@ -16,22 +16,33 @@
         
     </head>
     <body>
-        
-        <audio id="music" src="./aud_cont/default.mp3"></audio>
-        <button class="bt" id="bt1" onClick="play('music')"><img src="./icon/play.svg" width="32" height="32" /></button>
-        <button class="bt" id="bt2" onClick="stopp('music')"><img src="./icon/stop.svg" width="32" height="32" /></button>
-        <button class="bt" id="bt3" onClick="pause('music')"><img src="./icon/pause.svg" width="32" height="32" /></button>
-
-        <button id="play_midi_bt"><img src="./icon/play.svg" width="32" height="32" /></button>
-        <button id="pause_midi_bt"><img src="./icon/pause.svg" width="32" height="32" /></button>
-
+    
+    <div id="header">
+        <div id="controller1">
+            <p id="txt1">Play from the mp3 file</p>
+            <audio id="music" src="./aud_cont/default.mp3"></audio>
+            <button class="bt" id="bt1" onClick="play('music')"><img src="./icon/play.svg" width="32" height="32" /></button>
+            <button class="bt" id="bt2" onClick="stopp('music')"><img src="./icon/stop.svg" width="32" height="32" /></button>
+            <button class="bt" id="bt3" onClick="pause('music')"><img src="./icon/pause.svg" width="32" height="32" /></button>
+        </div>
+        <div id="controller2">
+            <p id="txt2">Play from the MEI file with verovio & Tone.js</p>
+            <button id="play_midi_bt"><img src="./icon/play.svg" width="32" height="32" /></button>
+            <button id="pause_midi_bt"><img src="./icon/stop.svg" width="32" height="32" /></button>
+        </div>
+    </div>
+    <div id="wrapper">
         <div class="uv" data-locale="en-GB:English (GB),cy-GB:Cymraeg" data-config="/config.json" data-uri="https://www.e-rara.ch/i3f/v20/22182025/manifest" data-collectionindex="0" data-manifestindex="0" data-sequenceindex="0" data-canvasindex="15" data-xywh="-1924,-1,10148,4058" data-rotation="0" style="width:45vw; height:80vh; background-color: #000"></div>
         
         <script type="text/javascript" id="embedUV" src="https://universalviewer.io/vendor/uv/lib/embed.js"></script>
         <script type="text/javascript">/* wordpress fix */</script>
 
         <div id="svg_output"/>
-        
+    </div>
         <script src="./src/veroTool.js" type="text/javascript" ></script>
+        <footer>
+            <p>This site presents the result of project <a href="https://hack.glam.opendata.ch/project/71">Team 17 "Making digitized scores audible" at the GLAMhack 2021</a>.</p>
+            <p>If you are interested in rendering a score and playing music from MEI file, please see <a href="https://github.com/NbtKmy/GLAMhack2021Team17">the Github repo</a>.</p>
+        </footer>
     </body>
 </html>

@@ -17,6 +17,8 @@ In this example page a MEI file is audible and can be rendered with the followin
 * trumpet 
 * violin
 
+A tone is chosen according to the "name of instrument" property in each track.  
+
 ## JS libraries
 
 The following JS libraries are applied:
